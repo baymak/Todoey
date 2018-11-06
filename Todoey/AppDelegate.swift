@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         
-        print("didFinishLaunchingWithOptions")
         return true
     }
 
