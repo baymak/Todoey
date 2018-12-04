@@ -9,7 +9,8 @@
 import UIKit
 import RealmSwift
 
-class TodoListViewController: UITableViewController {
+
+class TodoListViewController: SwipeTableViewController {
 
     var todoItems : Results<Item>?
     
@@ -19,6 +20,8 @@ class TodoListViewController: UITableViewController {
     var selectedCategory : Category? {
         didSet{
          loadItems()
+            
+            tableView.rowHeight = 80
         }
     }
     @IBOutlet weak var searchBar: UISearchBar!
@@ -46,7 +49,7 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
+       let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row] {
        
@@ -94,6 +97,27 @@ class TodoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
       
     }
+    
+    
+    //MARK: - Delete Data From Swipe
+//
+    override func updateModel(at indexPath: IndexPath) {
+
+     //        super .updateModel(at: indexPath)
+
+        if let toDoForDeletion = todoItems?[indexPath.row] {
+
+            do {
+                try self.realm.write {
+                    self.realm.delete(toDoForDeletion)
+                }
+
+
+            }
+            catch { print("error saving context \(error)")}
+
+        }
+      }
     
     //MARK - Add New Items
         
@@ -177,7 +201,6 @@ extension TodoListViewController: UISearchBarDelegate {
 }
 
     }
-
 
 
 
